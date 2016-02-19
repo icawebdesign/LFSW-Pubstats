@@ -10,13 +10,20 @@ use Dotenv\Dotenv;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
+/**
+ * Class LfswPubstats
+ *
+ * @package Icawebdesign\LfswPubstats
+ */
 class LfswPubstats
 {
     /**
      * @var array
      */
     protected $config = [];
-
+    /**
+     * @var string
+     */
     protected $dotenvFile = '.env';
 
     /**
@@ -26,7 +33,8 @@ class LfswPubstats
     {
         $this->dotenvFile = $dotenvFile;
         $this->readConfig(include_once __DIR__ . '/config/config.php');
-        return;
+
+        return $this;
     }
 
     /**
@@ -58,6 +66,13 @@ class LfswPubstats
         $log->log($messageTypeMapper[$messageType], $message, $context);
     }
 
+    /**
+     * Read config from config.php file and .env
+     *
+     * @param $configFile
+     *
+     * @return array
+     */
     public function readConfig($configFile)
     {
         // Store default config
@@ -91,6 +106,11 @@ class LfswPubstats
         return $this->config;
     }
 
+    /**
+     * Get config data
+     * 
+     * @return array
+     */
     public function getConfig()
     {
         return $this->config;
