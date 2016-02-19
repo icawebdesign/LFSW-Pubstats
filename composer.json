@@ -9,9 +9,12 @@
       "email": "ian.h@icawebdesign.co.uk"
     }
   ],
-  "require": {},
+  "require": {
+    "vlucas/phpdotenv": "v2.2.0"
+  },
   "require-dev": {
-    "phpunit/phpunit": "5.2.*"
+    "phpunit/phpunit": "5.2.*",
+    "monolog/monolog": "1.*"
   },
   "autoload": {
     "psr-4": {
