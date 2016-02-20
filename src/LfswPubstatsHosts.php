@@ -31,8 +31,6 @@ class LfswPubstatsHosts extends LfswPubstats
     {
         $this->setLfswUrl(['action' => 'hosts']);
         $hostData = '';
-        $offset = 0;
-        $hostList = [];
 
         try {
             $fp = fopen($this->lfswUrl, 'rb');
@@ -68,58 +66,6 @@ class LfswPubstatsHosts extends LfswPubstats
                     (0 === $host->raceDuration['hours']
                 ) ? true : false);
             }
-
-            /*if ('' !== trim($hostData)) {
-                while (true) {
-                    $hostInfo = substr($hostData, $offset, 53);
-
-                    if (53 !== strlen($hostInfo)) {
-                        break;
-                    }
-
-                    $data = unpack(
-                        'a32hostname/c1server_type/c1version/c1patch/c1test_version/c1track/c1config/c1track_rev/c1max_players/L1cars/L1rules/c1laps/c1qual_mins/x2/c1num_players',
-                        $hostInfo
-                    );
-                    $offset += 53;
-
-                    $racers = explode('&', chunk_split(substr($hostData, $offset, ($data['num_players'] * 24)), 24, '&'));
-                    array_pop($racers);
-                    $data['racers'] = array_map('rtrim', $racers);
-                    $offset += ($data['num_players'] * 24);
-
-                    $data['hours'] = 0;
-
-                    if ($data['laps'] > 100) {
-                        if ($data['laps'] < 191) {
-                            $data['laps'] = ((($data['laps'] - 100) * 10) + 100);
-                        } else {
-                            $data['laps'] = 0;
-                            $data['hours'] = $data['laps'] - 191;
-                        }
-                    }
-
-                    $data['track'] = "{$data['track']}{$data['config']}{$data['track_rev']}";
-                    $data['racers_json'] = json_encode($data['racers']);
-                    $data['version'] /= 10;
-                    $data['patch'] = chr($data['patch']);
-                    // @todo
-                    //$data['hostname_colour'] = $this->parseColourCodes($data['hostname']);
-                    // @todo
-                    //$data['server_type'] = $this->getServerTypes[$data['server_type']];
-                    // @todo
-                    //$data['cars'] = $this->parseCarBits($data['cars']);
-                    // @todo
-                    //$data['track'] = $this->parseTrackBits($data['track']);
-                    // @todo
-                    //$data['rules'] = $this->parseRuleBits($data['rules']);
-                    $data['access'] = 'Public';
-
-                    $hostList[] = (object)$data;
-                }
-
-                return $hostList;
-            }*/
 
             return $hostList;
         }
