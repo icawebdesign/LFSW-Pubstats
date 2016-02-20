@@ -57,6 +57,8 @@ class LfswPubstats
         'FXR'           => 'FXO GTR',
         'XRR'           => 'XR GTR',
         'FZR'           => 'FZ GTR',
+        'BF1'           => 'BMW Sauber F1.06',
+        'FBM'           => 'Formula BMW FB02',
     ];
 
     const carBits = [
@@ -78,6 +80,8 @@ class LfswPubstats
         32768           => 'FXR',
         65536           => 'XRR',
         131072          => 'FZR',
+        262144          => 'BF1',
+        524288          => 'FBM',
     ];
 
     const optionBits = [
