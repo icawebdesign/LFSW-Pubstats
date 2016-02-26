@@ -16,6 +16,7 @@ namespace Src;
 
 use Icawebdesign\LfswPubstats\LfswPubstats;
 use Icawebdesign\LfswPubstats\LfswPubstatsHosts;
+use Icawebdesign\LfswPubstats\LfswPubstatsRacer;
 
 class LfswPubstatsTest extends \PHPUnit_Framework_TestCase
 {
@@ -56,5 +57,14 @@ class LfswPubstatsTest extends \PHPUnit_Framework_TestCase
         $hostData = $lfswPubstatsHosts->getHostsOnline();
 
         $this->assertInternalType('array', $hostData);
+    }
+
+    /** @test */
+    public function get_racer_stats_should_return_stdclass_object()
+    {
+        $lfswPubstatsRacer = new LfswPubstatsRacer();
+        $racerData = $lfswPubstatsRacer->getRacerStats('Ian.H');
+
+        $this->assertInstanceOf('stdClass', $racerData);
     }
 }
