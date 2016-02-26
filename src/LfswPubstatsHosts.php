@@ -62,7 +62,7 @@ class LfswPubstatsHosts extends LfswPubstats
 
                 $host->raceDuration = $this->getRaceDurations($host->laps);
                 $host->practice = (
-                    (0 ===$host->raceDuration['laps']) &&
+                    (0 === $host->raceDuration['laps']) &&
                     (0 === $host->raceDuration['hours']
                 ) ? true : false);
             }

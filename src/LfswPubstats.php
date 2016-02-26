@@ -232,7 +232,7 @@ class LfswPubstats
     {
         // Store default config
         $this->config = $configFile;
-        
+
         // Read .env file if it exists
         if (file_exists(__DIR__ . '/../.env')) {
             $dotenv = new Dotenv(__DIR__ . '/..', $this->dotenvFile);
@@ -277,6 +277,45 @@ class LfswPubstats
     }
 
     /**
+     * Retrieve env value from config
+     *
+     * @param      $key
+     * @param null $default
+     *
+     * @return bool|null|string|void
+     */
+    public static function env($key, $default = null)
+    {
+        $value = getenv($key);
+
+        if (false === $value) {
+            return $default;
+        }
+
+        switch (strtolower($value)) {
+            case 'true':
+            case '(true)':
+                return true;
+
+            case 'false':
+            case '(false)':
+                return false;
+
+            case 'empty':
+            case '(empty)':
+                return '';
+
+            case 'null':
+            case '(null)':
+                return;
+        }
+
+        if ((0 === strpos($value, '"')) && ((strlen($value) + 1) === strrpos($value, '"'))) {
+            return substr($value, 1, -1);
+        }
+    }
+
+    /**
      * Set LFSWorld URL with query string for action and params
      *
      * @param array $queryString
@@ -289,7 +328,7 @@ class LfswPubstats
                          "?idk={$this->getConfig('IDKEY')}" .
                          '&s=1' .
                          '&' . http_build_query($queryString, null, '&');
-        
+
         if (null !== $this->getConfig('API_VERSION')) {
             $this->lfswUrl .= "&version={$this->getConfig('API_VERSION')}";
         }
@@ -299,7 +338,7 @@ class LfswPubstats
 
     /**
      * Parse colour codes (^1) into CSS class names
-     * 
+     *
      * @param string $data
      *
      * @return string
@@ -310,7 +349,7 @@ class LfswPubstats
         if (false === strpos($data, '^')) {
             return $data;
         }
-        
+
         $colourMap = [
             '0'             => 'lfs-black',
             '1'             => 'lfs-red',

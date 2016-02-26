@@ -27,7 +27,7 @@ class LfswPubstatsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFileExists(__DIR__ . '/../../log/pubstats.log');
     }
-    
+
     /** @test */
     public function read_config_file_should_store_data_in_array()
     {
@@ -48,7 +48,7 @@ class LfswPubstatsTest extends \PHPUnit_Framework_TestCase
         $lfswPubstats = new LfswPubstats('.env.example');
         $this->assertEquals('THIS SHOULD BE YOUR LFSWORLD PUBSTATS IDKEY', $lfswPubstats->getConfig('IDKEY'));
     }
-    
+
     /** @test */
     public function get_hosts_online_should_return_a_collection_of_host_data()
     {
