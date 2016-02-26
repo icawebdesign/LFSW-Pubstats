@@ -9,9 +9,10 @@
  * @license http://opensource.org/licenses/MIT MIT
  * @link https://github.com/icawebdesign/LFSW-Pubstats GitHub
  */
-
-
+use Icawebdesign\LfswPubstats\LfswPubstats;
 
 return [
-     'IDKEY'            => 'LFSWORLD PUBSTATS IDKEY',
- ];
+    'IDKEY'             => LfswPubstats::env('IDKEY', 'LFSWORLD PUBSTATS IDKEY'),
+    'API_VERSION'       => LfswPubstats::env('API_VERSION', null),      // 1.1, 1.2, 1.3, 1.4, 1.5, null for latest version
+    'LFSW_URL'          => 'http://www.lfsworld.net/pubstat/get_stat2.php',
+];
