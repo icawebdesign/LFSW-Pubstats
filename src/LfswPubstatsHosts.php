@@ -55,10 +55,6 @@ class LfswPubstatsHosts extends LfswPubstats
                 $host->tcrm = unpack('c1track/c1config/c1track_rev/c1max_players', $host->tcrm);
                 $trackNumber = "{$host->tcrm['track']}{$host->tcrm['config']}{$host->tcrm['track_rev']}";
                 $host->track = $this->parseTrackNumber($trackNumber);
-                $host->track['number'] = $trackNumber;
-                //$host->track['miles'] = $host->track['distance'];
-                //$host->track['kms'] = $this->milesToKms($host->track['distance']);
-                //unset($host->track['distance']);
 
                 $host->tmlt = unpack('c1server_type/c1version/c1patch/c1test_version', $host->tmlt);
                 $host->tmlt['version'] /= 10;

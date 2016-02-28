@@ -764,7 +764,10 @@ class LfswPubstats
     protected function parseTrackNumber($trackCode)
     {
         if (array_key_exists($trackCode, self::trackCodes)) {
-            return self::trackCodes[$trackCode];
+            $track = self::trackCodes[$trackCode];
+            $track['number'] = $trackCode;
+
+            return $track;
         }
 
         return null;
@@ -865,7 +868,7 @@ class LfswPubstats
     {
         $km = 1.609344;
 
-        return number_format($miles * $km, $precision);
+        return number_format($miles * $km, $precision, '.', '');
     }
 
     /**
@@ -880,6 +883,38 @@ class LfswPubstats
     {
         $miles = 0.6214;
 
-        return number_format($kms * $miles, $precision);
+        return number_format($kms * $miles, $precision, '.', '');
+    }
+
+    /**
+     * Convert online status code into string
+     *
+     * @param $statusCode
+     *
+     * @return string
+     */
+    public function getOnlineStatus($statusCode)
+    {
+        $status = 'Unknown';
+
+        switch ($statusCode) {
+            case 0:
+                $status = 'Offline';
+                break;
+
+            case 1:
+                $status = 'Spectating';
+                break;
+
+            case 2:
+                $status = 'In pits';
+                break;
+
+            case 3:
+                $status = 'In race';
+                break;
+        }
+
+        return $status;
     }
 }

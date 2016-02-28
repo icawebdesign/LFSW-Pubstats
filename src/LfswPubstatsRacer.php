@@ -37,7 +37,16 @@ class LfswPubstatsRacer extends LfswPubstats
             $racerStats->hostnamePlain = $this->stripColourCodes($racerStats->hostname);
 
             // Convert distance to miles
-            //$racerStats->distance = $this
+            $racerStats->distance = $this->kmsToMiles($racerStats->distance / 1000);
+
+            // Online status
+            $racerStats->status = $this->getOnlineStatus($racerStats->ostatus);
+
+            // Convert fuel from CL into litres
+            $racerStats->fuel = (double)$racerStats->fuel / 100;
+
+            // Get track info from track code
+            $racerStats->track = $this->parseTrackNumber($racerStats->track);
 
             return $racerStats;
         }
