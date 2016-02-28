@@ -74,6 +74,6 @@ class LfswPubstatsTest extends \PHPUnit_Framework_TestCase
         $lfswPubstatsRacer = new LfswPubstatsRacer();
         $data = $lfswPubstatsRacer->getRacerHotlaps('flotch');
 
-        $this->assertNotEmpty($data);
+        $this->assertInternalType('array', $data);
     }
 }

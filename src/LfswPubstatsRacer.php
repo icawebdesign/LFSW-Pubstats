@@ -96,6 +96,6 @@ class LfswPubstatsRacer extends LfswPubstats
             $hotlap->split3 = $this->millisecondsToTime($hotlap->split3);
         }
 
-        return $data;
+        return $hotlaps;
     }
 }
