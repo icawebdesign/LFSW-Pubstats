@@ -15,4 +15,5 @@ return [
     'IDKEY'             => LfswPubstats::env('IDKEY', 'LFSWORLD PUBSTATS IDKEY'),
     'API_VERSION'       => LfswPubstats::env('API_VERSION', null),      // 1.1, 1.2, 1.3, 1.4, 1.5, null for latest version
     'LFSW_URL'          => 'http://www.lfsworld.net/pubstat/get_stat2.php',
+    'LFSW_HL_DL_URL'    => 'http://www.lfsworld.net/get_spr.php',
 ];

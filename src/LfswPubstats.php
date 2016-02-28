@@ -562,6 +562,18 @@ class LfswPubstats
         'S3',
     ];
 
+    const hotlapFlagBits = [
+        1               => 'LEFTHANDDRIVE',
+        8               => 'AUTOGEAR',
+        16              => 'SHIFTER',
+        64              => 'BRAKEHELP',
+        128             => 'AXISCLUTCH',
+        512             => 'AUTOCLUTCH',
+        1024            => 'MOUSESTEER',
+        2048            => 'KN',
+        4096            => 'KS',
+    ];
+
     /**
      * LfswPubstats constructor.
      */
@@ -893,7 +905,7 @@ class LfswPubstats
      *
      * @return string
      */
-    public function getOnlineStatus($statusCode)
+    protected function getOnlineStatus($statusCode)
     {
         $status = 'Unknown';
 
@@ -916,5 +928,91 @@ class LfswPubstats
         }
 
         return $status;
+    }
+
+    /**
+     * Get data from LFSWorld
+     *
+     * @return string
+     */
+    protected function getLfswData()
+    {
+        $data = '';
+
+        try {
+            $fp = fopen($this->lfswUrl, 'rb');
+        } catch (\Exception $e) {
+            trigger_error($e->getMessage(), E_USER_ERROR);
+            die();
+        }
+
+        if (is_resource($fp)) {
+            while (!feof($fp)) {
+                $data .= fread($fp, 1024);
+            }
+
+            fclose($fp);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get hotlap flags from bits
+     *
+     * @param $flags
+     *
+     * @return array
+     */
+    protected function parseHotlapFlagBits($flags)
+    {
+        $flagsList = [];
+
+        foreach (self::hotlapFlagBits as $bit => $flag) {
+            if ($flags === ($flags | $bit)) {
+                $flagsList[] = $flag;
+            }
+        }
+
+        // If MOUSESTEER, KN or KS not found, assume WHEEL for controller
+        if (($flags !== ($flags | 1024)) && ($flags !== ($flags | 2048)) && ($flags !== ($flags | 4096))) {
+            $flagsList[] = 'WHEEL';
+        }
+
+        return $flagsList;
+    }
+
+    /**
+     * Generate download URL for a specific hotlap
+     *
+     * @param $hotlapId
+     *
+     * @return string
+     */
+    protected function getHotlapDownloadUrl($hotlapId)
+    {
+        return "{$this->getConfig('LFSW_HL_DL_URL')}?file={$hotlapId}";
+    }
+
+    /**
+     * Convert milliseconds into 00:00:00.000 time
+     *
+     * @param $milliseconds
+     *
+     * @return mixed
+     */
+    protected function millisecondsToTime($milliseconds)
+    {
+        $seconds = floor($milliseconds / 1000);
+        $minutes = floor($seconds / 60);
+        $hours = floor($minutes / 60);
+
+        $milliseconds = $milliseconds % 1000;
+        $seconds = $seconds % 60;
+        $minutes = $minutes % 60;
+
+        $time = sprintf('%u:%02u:%02u.%03u', $hours, $minutes, $seconds, $milliseconds);
+
+        return $time;
     }
 }
