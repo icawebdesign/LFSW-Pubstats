@@ -17,51 +17,33 @@ class LfswPubstatsRacer extends LfswPubstats
      * 
      * @param $racerName
      *
-     * @return null
+     * @return array|null
      */
     public function getRacerStats($racerName)
     {
         $this->setLfswUrl(['action' => 'pst', 'racer' => $racerName]);
+        $racerData = $this->getLfswData();
 
-        $racerData = '';
-
-        try {
-            $fp = fopen($this->lfswUrl, 'rb');
-        } catch (\Exception $e) {
-            trigger_error($e->getMessage(), E_USER_ERROR);
-            die();
+        if ('pst: no valid username' === $racerData) {
+            throw new \Exception('No valid username');
         }
 
-        if (is_resource($fp)) {
-            while (!feof($fp)) {
-                $racerData .= fread($fp, 1024);
-            }
+        $racerStats = json_decode($racerData)[0];
+        $racerStats->hostnamePlain = $this->stripColourCodes($racerStats->hostname);
 
-            if ('pst: no valid username' === $racerData) {
-                return null;
-            }
+        // Convert distance to miles
+        $racerStats->distance = $this->kmsToMiles($racerStats->distance / 1000);
 
-            fclose($fp);
+        // Online status
+        $racerStats->status = $this->getOnlineStatus($racerStats->ostatus);
 
-            $racerStats = json_decode($racerData)[0];
-            $racerStats->hostnamePlain = $this->stripColourCodes($racerStats->hostname);
+        // Convert fuel from CL into litres
+        $racerStats->fuel = (double)$racerStats->fuel / 100;
 
-            // Convert distance to miles
-            $racerStats->distance = $this->kmsToMiles($racerStats->distance / 1000);
+        // Get track info from track code
+        $racerStats->track = $this->parseTrackNumber($racerStats->track);
 
-            // Online status
-            $racerStats->status = $this->getOnlineStatus($racerStats->ostatus);
-
-            // Convert fuel from CL into litres
-            $racerStats->fuel = (double)$racerStats->fuel / 100;
-
-            // Get track info from track code
-            $racerStats->track = $this->parseTrackNumber($racerStats->track);
-
-            return $racerStats;
-        }
-
-        return null;
+        return $racerStats;
     }
 
     /**
@@ -80,7 +62,7 @@ class LfswPubstatsRacer extends LfswPubstats
 
         // Check error
         if ('hl: no hotlaps found' === $data) {
-            return false;
+            throw new \Exception('No hotlaps found for racer');
         }
 
         $hotlaps = json_decode($data);
